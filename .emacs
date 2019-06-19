@@ -186,3 +186,19 @@ Version 2018-03-31"
                   (while (search-forward $fromRight nil t)
                     (overlay-put (make-overlay (match-beginning 0) (match-end 0)) 'face 'highlight)
                     (replace-match $toRight "FIXEDCASE" "LITERAL")))))))))))
+(defun new-shell ()
+  (interactive)
+
+  (let (
+        (currentbuf (get-buffer-window (current-buffer)))
+        (newbuf     (generate-new-buffer-name "*shell*"))
+       )
+
+   (generate-new-buffer newbuf)
+   (set-window-dedicated-p currentbuf nil)
+   (set-window-buffer currentbuf newbuf)
+   (shell newbuf)
+  )
+  )
+(global-set-key (kbd "M-S") 'new-shell)
+
