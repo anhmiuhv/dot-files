@@ -57,7 +57,7 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 function parse_git_dirty {
-  [[ $(git status 2> /dev/null | tail -n1) != "nothing to commit (working directory clean)" ]] && echo "*"
+  [[ $(git status --porcelain  2> /dev/null) ]] && echo "*"
 }
 function parse_git_branch {
   git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/[\1$(parse_git_dirty)]/"
@@ -123,10 +123,22 @@ if ! shopt -oq posix; then
   fi
 fi
 
-#export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libgtk3-nocsd.so.0
-unset LD_PRELOAD
 
-alias e='emacs -nw'
+
+alias e='emacs25 -nw'
 bind 'set show-all-if-ambiguous on'
 bind 'TAB:menu-complete'
 export PATH=~/.cabal/bin:$PATH
+alias sudo='sudo '
+
+function set-title() {
+    if [[ -z "$ORIG" ]]; then
+	ORIG=$PS1
+    fi
+    TITLE="\[\e]2;$*\a\]"
+    PS1=${ORIG}${TITLE}
+}
+
+function bin2hex() {
+    echo "obase=16;ibase=2;$1"|bc
+}
